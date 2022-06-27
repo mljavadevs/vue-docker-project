@@ -1,0 +1,40 @@
+version: "3"
+services:
+  client:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_SERVER=http://localhost:3001
+    ports:
+      - 3000:80
+    networks:
+      - mern-network
+    volumes:
+      - ./frontend/src:/usr/app/src
+      - ./frontend/public:/usr/app/public
+    depends_on:
+      - server
+    # command: npm start
+    stdin_open: true
+    tty: true
+
+  server:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - 3001:3000
+    networks:
+      - mern-network
+    volumes:
+      - ./backend/src:/usr/app/src
+    # command: /usr/app/node_modules/.bin/nodemon -L src/index.js
+
+networks:
+  mern-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local

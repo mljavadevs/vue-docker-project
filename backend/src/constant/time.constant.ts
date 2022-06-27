@@ -1,0 +1,1 @@
+export const ONE_DAY_SECONDS: number = 86400;
