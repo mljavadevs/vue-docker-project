@@ -19,3 +19,5 @@ http://localhost:3000/
 ### Backend
 
 http://localhost:3001/
+
+Swagger docs: http://localhost:3001/api
