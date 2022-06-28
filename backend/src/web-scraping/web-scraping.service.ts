@@ -71,7 +71,7 @@ export class WebScrapingService {
 
   private async getScrapingData() {
     this.logger.log('getScrapingData called');
-    const scrapingData: string[] = [];
+    const symptomsList: string[] = [];
 
     const APIResponse = await this.httpService.axiosRef.get(
       'https://nhsinform.scot/symptoms-and-self-help/a-to-z',
@@ -82,36 +82,22 @@ export class WebScrapingService {
     const $ = load(APIResponse.data);
 
     // find specific elements from cheerio
-    const statsTable = $(
-      '#maincontent > div.panel-content-wrap > div > div > div > div',
-    ).children();
+    const statsTable = $('a.nhs-uk__az-link');
 
-    // get Data list with Alphabet
-    this.logger.log('get Data list with Alphabet iterating');
-    for (let i = 0; i < statsTable.length; i++) {
-      const row = statsTable[i];
-      const rowChildren = $(row).children();
 
-      // iterate through each row and get the children
-      for (let j = 0; j < rowChildren.length; j++) {
-        const data = $(rowChildren[j]).children();
-
-        for (let k = 0; k < data.length; k++) {
-          const data_repit = $(data[k]).children();
-          if (data_repit.length < 1) {
-            scrapingData.push($(data[k]).text().trim());
-          }
-        }
-      }
+    // get symptoms from the statsTable
+    for (let index = 0; index < statsTable.length; index++) {
+      const element = $(statsTable[index]).text().trim();
+      symptomsList.push(element);
     }
 
     // get unique data
     const s = new Set<string>();
-    scrapingData.forEach((x) => s.add(x));
-    scrapingData.splice(0);
-    s.forEach((value) => scrapingData.push(value));
+    symptomsList.forEach((x) => s.add(x));
+    symptomsList.splice(0);
+    s.forEach((value) => symptomsList.push(value));
 
-    return scrapingData;
+    return symptomsList;
   }
 
   private findData(s: string, data: string[]) {
