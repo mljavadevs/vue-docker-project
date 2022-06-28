@@ -12,6 +12,12 @@ Server: Nest Js
 docker-compose up
 ```
 
+### Project re-build
+
+```
+docker-compose build
+```
+
 ### Frontend
 
 http://localhost:3000/
